@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "dev": "concurrently 'yarn --cwd frontend dev' 'yarn --cwd backend dev'"
+  },
+  "dependencies": {
+    "@types/multer": "^1.4.7",
+    "multer": "^1.4.5-lts.1"
+  }
+}

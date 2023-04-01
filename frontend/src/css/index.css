@@ -1,0 +1,53 @@
+@import url('clash-display.css');
+@import url('satoshi.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fonts */
+
+/* * ClashDisplay */
+/* 
+font-family: 'ClashDisplay-Variable';
+font-family: 'ClashDisplay-Extralight';
+font-family: 'ClashDisplay-Light';
+font-family: 'ClashDisplay-Regular';
+font-family: 'ClashDisplay-Medium';
+font-family: 'ClashDisplay-Semibold';
+font-family: 'ClashDisplay-Bold'; 
+*/
+
+/* * Satoshi */
+/* font-family: 'Satoshi-Variable';
+font-family: 'Satoshi-VariableItalic';
+font-family: 'Satoshi-Light';
+font-family: 'Satoshi-LightItalic';
+font-family: 'Satoshi-Regular';
+font-family: 'Satoshi-Italic';
+font-family: 'Satoshi-Medium';
+font-family: 'Satoshi-MediumItalic';
+font-family: 'Satoshi-Bold';
+font-family: 'Satoshi-BoldItalic';
+font-family: 'Satoshi-Black';
+font-family: 'Satoshi-BlackItalic'; */
+
+body {
+  font-family: 'Satoshi-Regular';
+  @apply bg-gray-100
+}
+
+@layer components {
+  .bold {
+    font-family: 'Satoshi-Bold';
+  }
+  .semibold {
+    font-family: 'Satoshi-Medium';
+  }
+}
+
+#dropbox-label {
+  @apply w-full aspect-square border border-black rounded-md 
+  text-[20px] opacity-50 grid place-items-center
+}
+
