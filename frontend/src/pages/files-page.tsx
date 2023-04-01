@@ -1,11 +1,12 @@
 import { ImFileEmpty } from "react-icons/im";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useFile } from "../hooks/useFile";
 import { useScript } from "../hooks/useScript";
-import { files } from "../data/files";
+import { IFile } from "../types/types";
+
+import files from "../../../backend/data.json";
 
 import Navbar from "../components/navbar";
-import { IFile } from "../types/types";
 
 const FileField = ({ field, value }: { field: string; value: string }) => {
   return (
@@ -32,16 +33,26 @@ const File = ({ file }: { file: IFile }) => {
         {icon}
         <p className="mt-3">{file.filename}</p>
         <p className="opacity-50 text-[14px]">
-          {file.date} - {file.size}
+          {file.created.split("T")[0]} - {file.size}
         </p>
       </div>
     </NavLink>
   );
 };
 
-const FileInfo = ({ file }: { file: IFile | undefined }) => {
+const FileInfo = ({
+  file,
+  deleteFile,
+}: {
+  file: IFile | undefined;
+  deleteFile: () => void;
+}) => {
+  const navigate = useNavigate();
+
   if (file === undefined)
     return <div>Oops something went wrong with the file...</div>;
+
+  console.log();
 
   return (
     <div className="h-full px-5 pt-5">
@@ -52,9 +63,24 @@ const FileInfo = ({ file }: { file: IFile | undefined }) => {
       </div>
       <FileField field="Filename" value={file.filename} />
       <hr className="my-2" />
-      <FileField field="Size" value={file.size} />
+      <FileField field="Size" value={`${file.size}`} />
       <hr className="my-2" />
-      <FileField field="Created" value={new Date().toDateString()} />
+      <FileField field="Created" value={file.created.split("T")[0]} />
+      <div className="my-6" />
+      <div className="w-full flex justify-between">
+        <a
+          href={`http://localhost:5000/${file.path}`}
+          className="px-6 py-3 bg-black text-white hover:bg-transparent hover:text-black border border-black transition-all"
+        >
+          Download
+        </a>
+        <button
+          className="px-6 py-3 bg-transparent text-red-500 hover:bg-red-500 hover:text-white border border-red-500 transition-all"
+          onClick={deleteFile}
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 };
@@ -62,7 +88,7 @@ const FileInfo = ({ file }: { file: IFile | undefined }) => {
 const FilesPage = () => {
   const params = useParams();
 
-  const { file, uploadFile } = useFile(params.fileId);
+  const { file, uploadFile, deleteFile } = useFile(params.fileId);
 
   return (
     <div className="w-screen h-screen bg-gray-100">
@@ -71,7 +97,7 @@ const FilesPage = () => {
       </header>
       <div className="flex">
         <div className="w-3/4 grid grid-cols-4 gap-5 p-5">
-          {files.map((file, key) => (
+          {files.file.map((file, key) => (
             <File key={key} file={file} />
           ))}
           <label id="dropbox-label" htmlFor="dropbox">
@@ -87,7 +113,11 @@ const FilesPage = () => {
           </label>
         </div>
         <div className="w-1/4 h-[90%] right-0 fixed border-l bg-white">
-          {file === null ? "No file selected" : <FileInfo file={file} />}
+          {file === null ? (
+            "No file selected"
+          ) : (
+            <FileInfo file={file} deleteFile={deleteFile} />
+          )}
         </div>
       </div>
     </div>

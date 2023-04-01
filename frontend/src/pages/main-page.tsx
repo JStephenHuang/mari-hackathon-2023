@@ -14,7 +14,7 @@ const MainPage = () => {
           <p className="my-4">Setup your virtual storage.</p>
           <Link
             className="px-6 py-3 bg-black text-white hover:bg-transparent hover:text-black border border-black transition-all"
-            to="/form"
+            to="/storage"
           >
             Get started
           </Link>

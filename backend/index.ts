@@ -13,7 +13,7 @@ const port = 5000;
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static(join(__dirname, "static")));
-app.use(express.static(__dirname + "/public"));
+app.use("/data", express.static(__dirname + "/data"));
 
 const upload = multer({ dest: "data/" });
 
@@ -37,13 +37,45 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     size: uploadedFile.size,
     type: uploadedFile.mimetype,
     favorite: 0,
-    dateaccess: new Date(),
+    created: new Date(),
+    id: uploadedFile.filename,
+    path: uploadedFile.path,
   };
 
-  const data = JSON.stringify(file);
-  fs.writeFileSync("data.json", data);
+  const rawPreviousData = fs.readFileSync("data.json").toString();
+  const previousData = JSON.parse(rawPreviousData);
+
+  previousData.file.push(file);
+
+  const data = JSON.stringify(previousData);
+
+  fs.writeFile("data.json", data, (error) => {
+    if (error) {
+      console.log(error);
+    }
+  });
 
   return res.status(200).send(file);
+});
+
+app.delete("/remove/:fileId", (req, res) => {
+  console.log(req.params.fileId);
+  const rawPreviousData = fs.readFileSync("data.json").toString();
+  const previousData = JSON.parse(rawPreviousData);
+
+  const fileIds = previousData["file"].map((file: any) => file.id);
+
+  previousData.file.splice(fileIds.indexOf(req.params.fileId), 1);
+
+  console.log(previousData);
+
+  const data = JSON.stringify(previousData);
+
+  fs.writeFile("data.json", data, (error) => {
+    if (error) {
+      console.log(error);
+    }
+  });
 });
 
 app.listen(port, () => console.log(`Server Running on port ${port}`));
