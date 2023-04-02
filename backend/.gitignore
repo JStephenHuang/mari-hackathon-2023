@@ -1,4 +1,6 @@
 node_modules
 
-./data/credentials.json
-./data/token.json
+data/credentials.json
+data/token.json
+*.json
+`
